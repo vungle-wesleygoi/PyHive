@@ -311,7 +311,7 @@ class HiveDialect(default.DefaultDialect):
         rows = [row for row in rows if row[0] and row[0] != '# col_name']
         result = []
         for (col_name, col_type, _comment) in rows:
-            if col_name == '# Partition Information':
+            if col_name == '# Partitioning':
                 break
             # Take out the more detailed type information
             # e.g. 'map<int,int>' -> 'map'
@@ -361,7 +361,7 @@ class HiveDialect(default.DefaultDialect):
         query = 'SHOW TABLES'
         if schema:
             query += ' IN ' + self.identifier_preparer.quote_identifier(schema)
-        return [row[0] for row in connection.execute(query)]
+        return [row[1] for row in connection.execute(query)]
 
     def do_rollback(self, dbapi_connection):
         # No transactions for Hive
